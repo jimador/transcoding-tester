@@ -1,6 +1,8 @@
 package com.transcoding.tester;
 
 import org.bytedeco.javacpp.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -17,12 +19,12 @@ import java.io.OutputStream;
  * TODO: Current problem - Can't open converted images... I might have to refactor this after all :(
  */
 public class ConvertSample {
+    private static final Logger LOGGER = LoggerFactory.getLogger(ConvertSample.class);
     /**
      * Convert video from .mp4 to .avi
      */
-
     public static void saveFrame(avutil.AVFrame avFrame, int width, int height, int frameNum){
-        try(OutputStream stream = new FileOutputStream("frame " + frameNum + ".jpg")) {
+        try(OutputStream stream = new FileOutputStream("frame " + frameNum + ".ppm")) {
             stream.write(("P6\n" + width + " " + height + "\n255\n").getBytes());
 
             // Write pixel data
@@ -34,7 +36,7 @@ public class ConvertSample {
                 stream.write(bytes);
             }
         } catch (IOException ex){
-            System.err.println("Couldn't write file " + ex);
+            LOGGER.error("Couldn't write to file " + ex);
         }
     }
 
@@ -56,7 +58,7 @@ public class ConvertSample {
 
         //Did you pass me something to convert?
         if(args.length < 1){
-            System.out.println("No video found");
+            LOGGER.error("No video found");
             System.exit(-1);
         }
 
@@ -65,11 +67,13 @@ public class ConvertSample {
 
         //Open file and store it on context
         if (avformat.avformat_open_input(avFormatContext, args[0], null, null) != 0) {
-            System.exit(-1); //Can not open file
+            LOGGER.error("Couldn't open file!");
+            System.exit(-1);
         }
 
         if (avformat.avformat_find_stream_info(avFormatContext, (PointerPointer)null) < 0){
-            System.exit(-1); //Can not get stream information
+            LOGGER.error("Can't get stream info!");
+            System.exit(-1);
         }
 
         //Dump information about the file onto standard error
@@ -84,7 +88,8 @@ public class ConvertSample {
         }
 
         if(videoStream == -1){
-            System.exit(-1); //Couldn't find a video stream
+            LOGGER.error("Can't find a video stream");
+            System.exit(-1);
         }
 
         //Get a pointer to the codec context for the video stream
@@ -92,13 +97,14 @@ public class ConvertSample {
 
         avCodec = avcodec.avcodec_find_decoder(avCodecContext.codec_id());
         if(avCodec == null){
-            System.err.println("Unsupported Codec");
+            LOGGER.error("Unsupported Codec");
             System.exit(-1);
         }
 
         //Open the codec
         if (avcodec.avcodec_open2(avCodecContext, avCodec, optionsDictionary) < 0){
-            System.exit(-1); //Could not open codec
+            LOGGER.error("Can't open codec");
+            System.exit(-1);
         }
 
         //Allocation the video frame
@@ -108,11 +114,12 @@ public class ConvertSample {
         avFrameRgb = avutil.av_frame_alloc();
 
         if (avFrameRgb == null){
+            LOGGER.error("avFrameRgb is NULL!");
             System.exit(-1);
         }
 
         //Determine the required buffer size and allocate it
-        numBytes = avcodec.avpicture_get_size(avutil.AV_PIX_FMT_YUV411P, avCodecContext.width(), avCodecContext.height());
+        numBytes = avcodec.avpicture_get_size(avutil.AV_PIX_FMT_RGB24, avCodecContext.width(), avCodecContext.height());
         buffer = new BytePointer(avutil.av_malloc(numBytes));
 
         swsContext = swscale.sws_getContext(avCodecContext.width(),
@@ -120,7 +127,7 @@ public class ConvertSample {
                 avCodecContext.pix_fmt(),
                 avCodecContext.width(),
                 avCodecContext.height(),
-                avutil.AV_PIX_FMT_YUV411P,
+                avutil.AV_PIX_FMT_RGB24,
                 swscale.SWS_BILINEAR,
                 null,
                 null,
@@ -131,7 +138,7 @@ public class ConvertSample {
         //of AVPicture
         avcodec.avpicture_fill(new avcodec.AVPicture(avFrameRgb),
                 buffer,
-                avutil.AV_PIX_FMT_YUV411P,
+                avutil.AV_PIX_FMT_RGB24,
                 avCodecContext.width(),
                 avCodecContext.height());
 
