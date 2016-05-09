@@ -20,7 +20,7 @@ import java.io.OutputStream;
 public class ConvertSample {
     private static final Logger LOGGER = LoggerFactory.getLogger(ConvertSample.class);
     /**
-     * Convert video from .mp4 to .avi
+     * Save individual video frames
      */
     public static void saveFrame(avutil.AVFrame avFrame, int width, int height, int frameNum){
         try(OutputStream stream = new FileOutputStream("frame" + frameNum + ".ppm")) {
