@@ -16,7 +16,6 @@ import java.io.OutputStream;
  * TODO: If I feel like it, clean this up, this is unreadable nonsense.
  * TODO: That's what I get for following a C project line for line
  *
- * TODO: Current problem - Can't open converted images... I might have to refactor this after all :(
  */
 public class ConvertSample {
     private static final Logger LOGGER = LoggerFactory.getLogger(ConvertSample.class);
@@ -24,7 +23,7 @@ public class ConvertSample {
      * Convert video from .mp4 to .avi
      */
     public static void saveFrame(avutil.AVFrame avFrame, int width, int height, int frameNum){
-        try(OutputStream stream = new FileOutputStream("frame " + frameNum + ".ppm")) {
+        try(OutputStream stream = new FileOutputStream("frame" + frameNum + ".ppm")) {
             stream.write(("P6\n" + width + " " + height + "\n255\n").getBytes());
 
             // Write pixel data
