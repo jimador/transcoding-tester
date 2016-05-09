@@ -160,7 +160,7 @@ public class ConvertSample {
                             avFrameRgb.linesize());
 
                     //Save the frame to disk
-                    if( temp++ < 5){
+                    if( temp++ > 25 && temp++ < 50){
                         saveFrame(avFrameRgb, avCodecContext.width(), avCodecContext.height(), temp);
                     }
                 }
