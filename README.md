@@ -14,5 +14,5 @@ to new FFmpeg updates.
 
 [FFmpeg]: http://www.ffmpeg.org/
 [JavaCPP]: https://github.com/bytedeco/javacpp
-[JavaCPP-Presets] https://github.com/bytedeco/javacpp-presets
+[JavaCPP-Presets]: https://github.com/bytedeco/javacpp-presets
 [MIT]: https://github.com/jimador/transcoding-tester/blob/master/LICENSE
