@@ -4,6 +4,7 @@
 /src/main/webapp/assets/styles/main.css
 /src/main/webapp/dist
 *.mp4
+*.jpg
 
 ######################
 # Node
