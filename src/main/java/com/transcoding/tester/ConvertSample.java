@@ -1,3 +1,5 @@
+package com.transcoding.tester;
+
 import org.bytedeco.javacpp.*;
 
 import java.io.FileOutputStream;
@@ -11,6 +13,8 @@ import java.io.OutputStream;
  * 
  * TODO: If I feel like it, clean this up, this is unreadable nonsense.
  * TODO: That's what I get for following a C project line for line
+ *
+ * TODO: Current problem - Can't open converted images... I might have to refactor this after all :(
  */
 public class ConvertSample {
     /**
@@ -149,7 +153,7 @@ public class ConvertSample {
                             avFrameRgb.linesize());
 
                     //Save the frame to disk
-                    if( temp++ <= 5){
+                    if( temp++ < 5){
                         saveFrame(avFrameRgb, avCodecContext.width(), avCodecContext.height(), temp);
                     }
                 }
