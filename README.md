@@ -1,5 +1,8 @@
 # Transcoding Tester
 
+### Status
+[![Build Status](https://travis-ci.org/jimador/transcoding-tester.png)](https://travis-ci.org/jimador/transcoding-tester)
+
 The aim of this project is to provide myself with a playground to test out [JavaCPP] as an
 an easy to use Java interface to [FFmpeg]. All of the JNI classes are automatically generated
 with [JavaCPP]. Even the compilation into native code is controlled by JavaCPP. This way there is less effort to react
